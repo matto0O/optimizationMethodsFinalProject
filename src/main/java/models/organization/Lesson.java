@@ -2,17 +2,19 @@ package models.organization;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import models.people.Teacher;
 import models.rooms.Room;
 
 @Getter
 @AllArgsConstructor
-public class Course {
-    private String name;
-    private int maxStudents;
-    private Class<Room> roomType;
+public class Lesson {
+    private Course course;
+    private Room room;
+    private Teacher teacher;
+    private SchoolDateTime schoolDateTime;
 
     @Override
     public String toString() {
-        return name + " (" + maxStudents + " students)" + " in " + roomType.getSimpleName();
+        return course.name() + " in room no." + room.getRoomNumber() + " on " + schoolDateTime;
     }
 }

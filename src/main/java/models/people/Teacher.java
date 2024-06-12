@@ -2,26 +2,26 @@ package models.people;
 
 import lombok.Getter;
 import models.organization.Course;
-import models.organization.SchoolDay;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Getter
-public class Teacher extends Person {
+public class Teacher extends Person implements Serializable {
     private final int weeklyHours;
-    private final List<SchoolDay> inavailabilityList;
-    private final List<Course> competentIn;
+    private final Course competentIn;
 
-    public Teacher(String name, String surname, int weeklyHours,
-                   List<SchoolDay> inavailabilityList, List<Course> competentIn) {
+    public Teacher(String name, String surname, int weeklyHours, Course competentIn) {
         super(name, surname);
         this.weeklyHours = weeklyHours;
-        this.inavailabilityList = inavailabilityList;
         this.competentIn = competentIn;
     }
 
     @Override
     public String toString() {
-        return super.toString() + " - teacher (" + weeklyHours + " hours per week)";
+        return super.toString() + " - teacher of " + competentIn.toString() + " (" + weeklyHours + " hours per week)";
+    }
+
+    public boolean canTeach(Course course){
+        return competentIn.equals(course);
     }
 }

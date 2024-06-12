@@ -1,10 +1,11 @@
 package models.people;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public class Person {
+public class Person implements Serializable {
     private static int count = 0;
     private final int id;
     private final String name, surname;
@@ -18,5 +19,18 @@ public class Person {
     @Override
     public String toString() {
         return name + " " + surname;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Person) {
+            return ((Person) obj).id == this.id;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

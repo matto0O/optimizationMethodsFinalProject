@@ -1,13 +1,12 @@
 package utils;
 
 import com.github.javafaker.Faker;
-import models.organization.ClassType;
 import models.organization.Course;
-import models.people.Gender;
+import models.people.Teacher;
 import models.rooms.Room;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class Generator {
@@ -27,22 +26,36 @@ public class Generator {
         return faker.number().numberBetween(20, 40);
     }
 
-    public static HashMap<Course, Integer> generateCourses(
-            int baseClassesPerWeek, int specializationClassesPerWeek) {
+    public static HashMap<Course, Integer> generateCourses(int classesPerWeek) {
         HashMap<Course, Integer> courses = new HashMap<>();
+        for (int i = 0; i < classesPerWeek; i++) {
+            Course course = Course.values()[random.nextInt(Course.values().length)];
+            if (courses.containsKey(course)) {
+                courses.put(course, courses.get(course) + 1);
+            } else {
+                courses.put(course, 1);
+            }
+        }
 
-
-
-        courses.put(Course.MATH, 5);
-        courses.put(Course.ENGLISH, 5);
-
-        courses.put(Course.IT, 1);
-        courses.put(Course.BIOLOGY, 1);
-        courses.put(Course.PHYSICS, 1);
-        courses.put(Course.CHEMISTRY, 1);
-        courses.put(Course.PE, 2);
-        courses.put(Course.HISTORY, 2);
-        courses.put(Course.FOREIGN, 3);
         return courses;
+    }
+
+    public static ArrayList<Room> generateRooms(int count){
+        ArrayList<Room> availableRooms = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            availableRooms.add(new Room());
+        }
+
+        return availableRooms;
+    }
+
+    public static ArrayList<Teacher> generateTeachers(int weeklyHours, int count){
+        ArrayList<Teacher> teachers = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Course course = Course.values()[i%Course.values().length];
+            teachers.add(new Teacher(generateName(), generateLastName(), weeklyHours, course));
+        }
+
+        return teachers;
     }
 }
