@@ -32,12 +32,12 @@ public class Instance implements Serializable {
 
     public Instance() {
         // TODO generators
-        this.availableRooms = Generator.generateRooms(30);
+        this.availableRooms = Generator.generateRooms(100);
         this.schoolClasses = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             schoolClasses.add(new SchoolClass((i+1) + "A", Generator.generateCourses(30)));
         }
-        this.teachers = Generator.generateTeachers(40, 20);
+        this.teachers = Generator.generateTeachers(40, 50);
         this.lessonsPerWeek = 30;
         this.periods = 12;
     }

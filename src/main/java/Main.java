@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Instance instance = new Instance();
 
-        Solver geneticAlgorithm = new Solver(instance,10000,0.1,0.5);
+        Solver geneticAlgorithm = new Solver(instance,10000,0.01,0.5);
         for (int i = 0; i < 1000; i++) {
             geneticAlgorithm.nextGeneration();
             System.out.println(Arrays.toString((geneticAlgorithm.getBestSolution().getFitnesses())));
@@ -26,6 +26,5 @@ public class Main {
             }
         }
 
-        instance.getSchoolClasses().forEach(System.out::println);
     }
 }

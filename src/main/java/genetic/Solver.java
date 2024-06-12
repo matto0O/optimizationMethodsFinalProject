@@ -12,17 +12,14 @@ public class Solver {
     double crossRate;
 
     void mutate(){
-        for (var s:population) {
-            s.mutate(mutationRate);
-        }
+        population.parallelStream().forEach(solution -> solution.mutate(mutationRate));
     }
     Solution selectParent(){
-        double p = Math.random()*Math.random();
+        double p = Math.random()*Math.random()*Math.random();
         return population.get((int)(p*population.size()));
     }
     void evaluatePopulation(){
-        for(var s:population)
-            s.calculateFitness();
+        population.parallelStream().forEach(Solution::calculateFitness);
         population.sort(new SolutionHelper());
     }
     public Solver(Instance instance, int populationSize,double mutationRate,double crossRate){
