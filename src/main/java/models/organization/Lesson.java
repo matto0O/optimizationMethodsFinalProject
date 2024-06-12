@@ -2,10 +2,12 @@ package models.organization;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import models.people.Teacher;
 import models.rooms.Room;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class Lesson {
     private Course course;
