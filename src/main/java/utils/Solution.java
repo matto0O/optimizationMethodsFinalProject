@@ -80,11 +80,54 @@ public class Solution {
     // TODO - Fitness functions will be changed
 
     public int evaluateTeacherFitness(Teacher teacher){
-        return teacherAvailability.get(teacher).size();
+        var fitness = 0;
+        var hours = teacherAvailability.get(teacher).size();
+        fitness += (int) (-Math.pow(Math.abs(teacher.getWeeklyHours() - hours),  1.5));
+        // Hole penalty
+        var days = teacherAvailability.get(teacher).stream().map(SchoolDateTime::getDay).collect(Collectors.toSet());
+        for (SchoolDay schoolDay : days) {
+            if (teacherAvailability.get(teacher).stream()
+                .filter(schoolDateTime -> schoolDateTime.getDay() == schoolDay)
+                .count() >= 2) {
+            var periods = teacherAvailability.get(teacher).stream()
+                .filter(schoolDateTime -> schoolDateTime.getDay() == schoolDay)
+                .map(SchoolDateTime::getPeriod)
+                .collect(Collectors.toList());
+            periods.sort(Comparator.naturalOrder());
+            for (int i = 0; i < periods.size() - 1; i++) {
+                if (periods.get(i + 1) - periods.get(i) > 1) {
+                    fitness += periods.get(i + 1) - periods.get(i);
+                }
+            }
+        }
+        }
+
+
+
+        return fitness;
     }
 
     public int evaluateClassFitness(SchoolClass schoolClass){
-        return timetables.get(schoolClass).size();
+        if (!timetables.containsKey(schoolClass)) {
+            int fitness = 0;
+            Map<Course, Integer> courses = schoolClass.getCourses();
+
+            for (Map.Entry<Course, Integer> entry : courses.entrySet()) {
+                Course course = entry.getKey();
+                int requiredCount = entry.getValue();
+                int actualCount = (int) timetables.get(schoolClass).stream()
+                        .filter(lesson -> lesson.getCourse().equals(course))
+                        .count();
+
+                if (actualCount < requiredCount) {
+                    fitness += requiredCount - actualCount;
+                }
+            }
+
+            return fitness;
+        } else {
+            return 0;
+        }
     }
 
     public int evaluateTotalTeacherFitness(){
