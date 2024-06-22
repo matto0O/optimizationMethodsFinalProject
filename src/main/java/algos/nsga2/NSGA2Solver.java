@@ -156,7 +156,7 @@ public class NSGA2Solver{
         }
     }
 
-    void nextGeneration(){
+    public void nextGeneration(){
         ArrayList<DominanceHelper> offspring = new ArrayList<>(population.size() * 2);
 
         while(offspring.size() < population.size()){
@@ -187,6 +187,9 @@ public class NSGA2Solver{
 
         population = newPopulation;
         evaluatePopulation();
+    }
+    public Solution getBestSolution(){
+        return population.getFirst();
     }
 
     public void run(){

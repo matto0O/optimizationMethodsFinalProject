@@ -1,17 +1,20 @@
 package utils;
 
-import utils.Solution;
-
-import java.util.Arrays;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Comparator;
-import java.util.function.BinaryOperator;
 
 public class SolutionHelper implements Comparator<Solution>{
 
     static float teacherMult, studentMult;
 
-    public static int getCombinedFitness(Solution s){
-        return Arrays.stream(s.getFitnesses()).sum();//todo multiply by the teacher and student multipliers
+    static public void savetofile(PrintStream out, Solution s, int i, float time){
+        out.println(i+" "+ time +" "+getCombinedFitness(s)+" "+s.evaluateTotalClassFitness()+" "+s.evaluateTotalTeacherFitness());
+    }
+
+    public static float getCombinedFitness(Solution s){
+        return teacherMult*s.evaluateTotalTeacherFitness()+studentMult*s.evaluateTotalClassFitness();
     }
 
     public static void setFitnessMult(float teacherMultf, float studentMultf) {
@@ -20,7 +23,11 @@ public class SolutionHelper implements Comparator<Solution>{
     }
 
     @Override
-    public int compare(Solution o1, Solution o2) {
+    public int compare(Solution o1,Solution o2){
+        return  Float.compare(getCombinedFitness(o1),getCombinedFitness(o2));
+    }
+
+    public int compare5d(Solution o1, Solution o2) {
 
         int[] s1 = o1.getFitnesses();
         int[] s2 = o2.getFitnesses();

@@ -176,7 +176,6 @@ public class Solution {
         }
         return count;
     }
-
     public int fitness_Overbooked() {
         int count = 0;
         for (Room room : roomAvailability.keySet()) {
@@ -193,7 +192,6 @@ public class Solution {
         }
         return count;
     }
-
     public int fitness_Holes() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
@@ -222,7 +220,6 @@ public class Solution {
         }
         return count;
     }
-
     public int fitness_timestartend() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
@@ -235,7 +232,6 @@ public class Solution {
         }
         return count;
     }
-
     public int fitness_ClassChanging() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
@@ -251,7 +247,6 @@ public class Solution {
         }
         return count;
     }
-
     //fitness class missing courses
     //fitness courses in wrong classrooms
     //fitness wrong teacher in course
