@@ -3,9 +3,12 @@ package models.organization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor
-public class SchoolDateTime {
+public class SchoolDateTime implements Serializable {
     private SchoolDay day;
     private int period;
 
@@ -20,5 +23,10 @@ public class SchoolDateTime {
             return this.day.equals(other.day) && this.period == other.period;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day, period);
     }
 }
