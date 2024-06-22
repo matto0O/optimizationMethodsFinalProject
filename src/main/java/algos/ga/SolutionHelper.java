@@ -8,20 +8,27 @@ import java.util.function.BinaryOperator;
 
 public class SolutionHelper implements Comparator<Solution>{
 
+    static float teacherMult, studentMult;
+
     public static int getCombinedFitness(Solution s){
-        return Arrays.stream(s.getFitnesses()).sum();
+        return Arrays.stream(s.getFitnesses()).sum();//todo multiply by the teacher and student multipliers
     }
+
+    public static void setFitnessMult(float teacherMultf, float studentMultf) {
+        teacherMult = teacherMultf;
+        studentMult = studentMultf;
+    }
+
     @Override
     public int compare(Solution o1, Solution o2) {
 
-        var f1 = Integer.compare(o1.getFitnesses()[0], o2.getFitnesses()[0]);
-        if(f1!=0)return f1;
-
-        var f2 = Integer.compare(o1.getFitnesses()[1], o2.getFitnesses()[1]);
-        if(f2!=0)return f2;
-
         int[] s1 = o1.getFitnesses();
         int[] s2 = o2.getFitnesses();
+
+        var f1 = Integer.compare(s1[0], s2[0]);
+        if(f1!=0)return f1;
+        var f2 = Integer.compare(s1[1], s2[1]);
+        if(f2!=0)return f2;
 
         /*
         //technically illegal if weights are applied,

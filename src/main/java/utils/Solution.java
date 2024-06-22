@@ -199,10 +199,11 @@ public class Solution {
         for (SchoolClass schoolClass : timetables.keySet()) {
             List<Lesson> lessons = timetables.get(schoolClass);
             lessons.sort(Comparator.comparing(l -> l.getSchoolDateTime().getPeriod()));
+            lessons.sort(Comparator.comparing(l -> l.getSchoolDateTime().getDay()));
             for (int i = 0; i < lessons.size() - 1; i++) {
                 Lesson lesson1 = lessons.get(i);
                 Lesson lesson2 = lessons.get(i + 1);
-                if (lesson2.getSchoolDateTime().getPeriod() - lesson1.getSchoolDateTime().getPeriod() > 1) {
+                if (lesson2.getSchoolDateTime().getDay()==lesson1.getSchoolDateTime().getDay() && lesson2.getSchoolDateTime().getPeriod() - lesson1.getSchoolDateTime().getPeriod() > 1) {
                     count++;
                 }
             }
@@ -210,10 +211,11 @@ public class Solution {
         for (Teacher teacher : teacherAvailability.keySet()) {
             List<SchoolDateTime> availableTimes = teacherAvailability.get(teacher);
             availableTimes.sort(Comparator.comparing(SchoolDateTime::getPeriod));
+            availableTimes.sort(Comparator.comparing(SchoolDateTime::getDay));
             for (int i = 0; i < availableTimes.size() - 1; i++) {
                 SchoolDateTime time1 = availableTimes.get(i);
                 SchoolDateTime time2 = availableTimes.get(i + 1);
-                if (time2.getPeriod() - time1.getPeriod() > 1) {
+                if (time2.getDay()==time1.getDay() && time2.getPeriod() - time1.getPeriod() > 1) {
                     count++;
                 }
             }
@@ -226,7 +228,7 @@ public class Solution {
         for (SchoolClass schoolClass : timetables.keySet()) {
             List<Lesson> lessons = timetables.get(schoolClass);
             for (Lesson lesson : lessons) {
-                if (lesson.getSchoolDateTime().getPeriod() >= instance.getPeriods() - 1) {
+                if (lesson.getSchoolDateTime().getPeriod() >= instance.getPeriods()) {
                     count++;
                 }
             }
@@ -252,7 +254,8 @@ public class Solution {
 
     //fitness class missing courses
     //fitness courses in wrong classrooms
-
+    //fitness wrong teacher in course
+    //fitness teacher(or students) changes classroom during the day
 
     private int[] fitnesses;
     public void calculateFitness(){
@@ -261,12 +264,10 @@ public class Solution {
 
     //ea functions
     public void random() {
-        // Clear existing timetables and availability
         timetables.clear();
         roomAvailability.clear();
         teacherAvailability.clear();
 
-        // Initialize timetables and availability
         instance.getSchoolClasses().forEach(schoolClass -> timetables.put(schoolClass, new ArrayList<>()));
         instance.getAvailableRooms().forEach(room -> roomAvailability.put(room, new ArrayList<>()));
         instance.getTeachers().forEach(teacher -> teacherAvailability.put(teacher, new ArrayList<>()));
@@ -296,7 +297,7 @@ public class Solution {
                         addLesson(schoolClass, course, room, teacher, schoolDateTime);
                     }
                     else{
-                        //lol, schould throw error
+                        //lol, schould throw error, to hire a new teacher
                     }
                 }
             }
@@ -332,6 +333,9 @@ public class Solution {
                         lesson.setTeacher(newTeacher);
                         updateAvailability(lesson.getSchoolDateTime(), oldTeacher, newTeacher);
                     }
+                    else{
+                        //maybe hire a new teacher
+                    }
                 }
 
                 if (random.nextDouble() < rate) {
@@ -344,6 +348,9 @@ public class Solution {
                         Room newRoom = availableRooms.get(random.nextInt(availableRooms.size()));
                         lesson.setRoom(newRoom);
                         updateAvailability(lesson.getSchoolDateTime(), oldRoom, newRoom);
+                    }
+                    else{
+                        //maybe build a school before organising lessons
                     }
                 }
             }
@@ -382,22 +389,8 @@ public class Solution {
 
             for (int i = 0; i < lessonsA.size(); i++) {
                 if (random.nextDouble() < crossRate) {
-                    Lesson lessonA = lessonsA.get(i);
-                    Lesson lessonB = lessonsB.get(i);
-
-                    // Swap the lessons between solutions
-                    SchoolDateTime dateTimeA = lessonA.getSchoolDateTime();
-                    SchoolDateTime dateTimeB = lessonB.getSchoolDateTime();
-                    Room roomA = lessonA.getRoom();
-                    Room roomB = lessonB.getRoom();
-                    Teacher teacherA = lessonA.getTeacher();
-                    Teacher teacherB = lessonB.getTeacher();
-
-                    if (child.canAddLesson(schoolClass, roomB, teacherB, dateTimeB)) {
-                        child.addLesson(schoolClass, lessonB.getCourse(), roomB, teacherB, dateTimeB);
-                    } else {
-                        child.addLesson(schoolClass, lessonA.getCourse(), roomA, teacherA, dateTimeA);
-                    }
+                    child.addLesson(schoolClass, lessonsA.get(i).getCourse(), lessonsB.get(i).getRoom(),
+                            lessonsA.get(i).getTeacher(), lessonsB.get(i).getSchoolDateTime());
                 } else {
                     child.addLesson(schoolClass, lessonsA.get(i).getCourse(), lessonsA.get(i).getRoom(),
                             lessonsA.get(i).getTeacher(), lessonsA.get(i).getSchoolDateTime());

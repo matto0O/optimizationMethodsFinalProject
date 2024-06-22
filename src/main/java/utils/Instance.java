@@ -29,6 +29,16 @@ public class Instance implements Serializable {
         this.lessonsPerWeek = 30;
         this.periods = 10;
     }
+    public Instance(int rooms, int classes, int coursesPerClass,int teachers,int peroidsADay,int teachersWorkHours) {
+        this.availableRooms = Generator.generateRooms(rooms);
+        this.schoolClasses = new ArrayList<>();
+        for (int i = 0; i < classes; i++) {
+            schoolClasses.add(new SchoolClass((i+1) + "A", Generator.generateCourses(coursesPerClass)));
+        }
+        this.teachers = Generator.generateTeachers(teachersWorkHours, teachers);
+        this.lessonsPerWeek = coursesPerClass;
+        this.periods = peroidsADay;
+    }
 
     public Instance() {
         // TODO generators
@@ -37,7 +47,7 @@ public class Instance implements Serializable {
         for (int i = 0; i < 5; i++) {
             schoolClasses.add(new SchoolClass((i+1) + "A", Generator.generateCourses(30)));
         }
-        this.teachers = Generator.generateTeachers(40, 50);
+        this.teachers = Generator.generateTeachers(40, 100);
         this.lessonsPerWeek = 30;
         this.periods = 12;
     }
