@@ -130,18 +130,20 @@ public class Solution {
         }
     }
 
+
+    // TODO fitness caching
     public int evaluateTotalTeacherFitness(){
         int fitness = 0;
-        for (var entry : teacherAvailability.entrySet()) {
-            fitness += entry.getValue().size();
+        for (Teacher teacher : teacherAvailability.keySet()) {
+            fitness += evaluateTeacherFitness(teacher);
         }
         return fitness;
     }
 
     public int evaluateTotalClassFitness(){
         int fitness = 0;
-        for (var entry : timetables.entrySet()) {
-            fitness += entry.getValue().size();
+        for (SchoolClass schoolClass : timetables.keySet()) {
+            fitness += evaluateClassFitness(schoolClass);
         }
         return fitness;
     }
@@ -404,5 +406,25 @@ public class Solution {
         }
 
         return child;
+    }
+
+    public Solution(Solution s){
+        this.instance = s.instance;
+        this.roomAvailability = new HashMap<>(s.roomAvailability);
+        this.teacherAvailability = new HashMap<>(s.teacherAvailability);
+        this.timetables = new HashMap<>(s.timetables);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Solution solution = (Solution) o;
+        return Objects.equals(roomAvailability, solution.roomAvailability) && Objects.equals(teacherAvailability, solution.teacherAvailability) && Objects.equals(timetables, solution.timetables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomAvailability, teacherAvailability, timetables);
     }
 }

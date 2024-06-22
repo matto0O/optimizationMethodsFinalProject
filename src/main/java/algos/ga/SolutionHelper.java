@@ -1,4 +1,6 @@
-package utils;
+package algos.ga;
+
+import utils.Solution;
 
 import java.util.Arrays;
 import java.util.Comparator;

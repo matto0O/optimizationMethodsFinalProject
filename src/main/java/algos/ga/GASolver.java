@@ -1,20 +1,24 @@
-package genetic;
+package algos.ga;
 
 import utils.Instance;
 import utils.Solution;
-import utils.SolutionHelper;
 
 import java.util.ArrayList;
 
-public class GeneticBase {
+public class GASolver{
     ArrayList<Solution> population;
     double mutationRate;
     double crossRate;
+    int iterations;
+    int tournamentSize;
 
-    public GeneticBase(Instance instance, int populationSize, double mutationRate, double crossRate){
+    public GASolver(Instance instance, int populationSize, double mutationRate,
+                    double crossRate, int iterations, int tournamentSize) {
         this.mutationRate=mutationRate;
         this.crossRate=crossRate;
         population = initializePopulation(populationSize,instance);
+        this.iterations = iterations;
+        this.tournamentSize = tournamentSize;
     }
 
     ArrayList<Solution> initializePopulation(int populationSize, Instance instance){
@@ -40,4 +44,30 @@ public class GeneticBase {
         population.parallelStream().forEach(Solution::calculateFitness);
         population.sort(new SolutionHelper());
     }
+
+    public Solution getBestSolution(){
+        return population.getFirst();
+    }
+
+    void nextGeneration(){
+        ArrayList<Solution> newPopulation = new ArrayList<>();
+        for(int i=0;i<population.size();i++){
+            var parentA = selectParent();
+            var parentB = selectParent();
+            var n = Solution.cross(parentA,parentB,crossRate);
+            newPopulation.add(n);
+        }
+        population=newPopulation;
+        mutate();
+        evaluatePopulation();
+    }
+
+    public void run(){
+        for (int i = 0; i < iterations; i++) {
+            nextGeneration();
+            var t = getBestSolution();
+            t.calculateFitness();
+        }
+    }
+
 }
