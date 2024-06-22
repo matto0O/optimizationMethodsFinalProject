@@ -1,4 +1,4 @@
-import genetic.GASolver;
+import algos.ga.GASolver;
 import utils.Instance;
 import utils.SolutionHelper;
 
@@ -43,17 +43,19 @@ public class Main {
             double crossoverRate = Double.parseDouble(args[argnum++]);
             int gen = Integer.parseInt(args[argnum++]);
 
-            GASolver geneticAlgorithm = new GASolver(instance, populationSize, mutationRate, crossoverRate);
+            GASolver geneticAlgorithm = new GASolver(instance, populationSize, mutationRate, crossoverRate, gen);
             //SolutionHelper.setFitnessDimensions(fitnessDimensions);
 
-            for (int i = 0; i < gen; i++) {
-                geneticAlgorithm.nextGeneration();
-                System.out.println("Generation " + (i + 1) + ":");
-                System.out.println("Fitnesses: " + Arrays.toString(geneticAlgorithm.getBestSolution().getFitnesses()));
-                System.out.println("Combined Fitness: " + SolutionHelper.getCombinedFitness(geneticAlgorithm.getBestSolution()));
-                System.out.println();
-                //todo add file output
-            }
+//            for (int i = 0; i < gen; i++) {
+//                geneticAlgorithm.nextGeneration();
+//                System.out.println("Generation " + (i + 1) + ":");
+//                System.out.println("Fitnesses: " + Arrays.toString(geneticAlgorithm.getBestSolution().getFitnesses()));
+//                System.out.println("Combined Fitness: " + SolutionHelper.getCombinedFitness(geneticAlgorithm.getBestSolution()));
+//                System.out.println();
+//                //todo add file output
+//            }
+
+            geneticAlgorithm.run();
         } else if ("NSGA2".equalsIgnoreCase(algorithmName)) {
             //todo
         } else {

@@ -1,4 +1,4 @@
-package algos.ga;
+package utils;
 
 import utils.Solution;
 

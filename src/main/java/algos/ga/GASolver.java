@@ -2,6 +2,7 @@ package algos.ga;
 
 import utils.Instance;
 import utils.Solution;
+import utils.SolutionHelper;
 
 import java.util.ArrayList;
 
@@ -10,15 +11,13 @@ public class GASolver{
     double mutationRate;
     double crossRate;
     int iterations;
-    int tournamentSize;
 
     public GASolver(Instance instance, int populationSize, double mutationRate,
-                    double crossRate, int iterations, int tournamentSize) {
+                    double crossRate, int iterations) {
         this.mutationRate=mutationRate;
         this.crossRate=crossRate;
         population = initializePopulation(populationSize,instance);
         this.iterations = iterations;
-        this.tournamentSize = tournamentSize;
     }
 
     ArrayList<Solution> initializePopulation(int populationSize, Instance instance){
@@ -49,7 +48,7 @@ public class GASolver{
         return population.getFirst();
     }
 
-    void nextGeneration(){
+    public void nextGeneration(){
         ArrayList<Solution> newPopulation = new ArrayList<>();
         for(int i=0;i<population.size();i++){
             var parentA = selectParent();

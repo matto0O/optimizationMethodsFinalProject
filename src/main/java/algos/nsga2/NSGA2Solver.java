@@ -2,7 +2,7 @@ package algos.nsga2;
 
 import utils.Instance;
 import utils.Solution;
-import algos.ga.SolutionHelper;
+import utils.SolutionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
