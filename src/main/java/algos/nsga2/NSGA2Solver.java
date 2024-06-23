@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class NSGA2Solver{
     ArrayList<DominanceHelper> population;
+    ArrayList<DominanceHelper> optimalFront;
     double mutationRate;
     double crossRate;
     int iterations;
@@ -170,6 +171,7 @@ public class NSGA2Solver{
         offspring.addAll(population);
 
         ArrayList<ArrayList<DominanceHelper>> fronts = nonDominatedSorting(offspring);
+        optimalFront = fronts.getFirst();
 
         ArrayList<DominanceHelper> newPopulation = new ArrayList<>(population.size());
         int i = 0;
