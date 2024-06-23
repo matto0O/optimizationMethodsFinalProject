@@ -137,7 +137,7 @@ public class Solution {
 //        for (Teacher teacher : teacherAvailability.keySet()) {
 //            fitness += evaluateTeacherFitness(teacher);
 //        }
-        fitness+=fitness_Overworked_teacher();
+        fitness+=fitness_Overworked_teacher();//
         fitness+=fitness_Holes_teacher();
         fitness+=fitness_WrongTeacherAssignment();
         return fitness;
@@ -148,12 +148,12 @@ public class Solution {
 //        for (SchoolClass schoolClass : timetables.keySet()) {
 //            fitness += evaluateClassFitness(schoolClass);
 //        }
-        fitness+=fitness_Overworked_class();
-        fitness+=fitness_Holes_Class();
-        fitness+=fitness_Overbooked();
-        fitness+=fitness_timestartend();
-        fitness+=fitness_MissingCourses();
-        fitness+=fitness_CoursesInWrongClassrooms();
+        fitness+=fitness_Overworked_class();//two courses at the same time
+        fitness+=fitness_Holes_Class();//sum of holes between lessons
+        fitness+=fitness_Overbooked();//two different classes have one room
+        fitness+=fitness_timestartend();//lessons late
+        fitness+=fitness_MissingCourses();//not all courses are
+        fitness+=fitness_CoursesInWrongClassrooms();//dsnt work at the moment
         return fitness;
     }
     //fitness-count of how many errors there are

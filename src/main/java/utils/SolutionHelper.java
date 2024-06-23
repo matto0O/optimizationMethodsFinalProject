@@ -9,8 +9,8 @@ public class SolutionHelper implements Comparator<Solution>{
 
     static float teacherMult, studentMult;
 
-    static public void savetofile(PrintStream out, Solution s, int i, float time){//todo add time?
-        out.println(i+","+ time +","+getCombinedFitness(s)+","+s.evaluateTotalClassFitness()+","+s.evaluateTotalTeacherFitness());
+    static public void savetofile(PrintStream out, Solution s, int i, double avg){//todo add time?
+        out.println(i+","+ avg +","+getCombinedFitness(s)+","+s.evaluateTotalClassFitness()+","+s.evaluateTotalTeacherFitness());
     }
 
     public static float getCombinedFitness(Solution s){
@@ -25,7 +25,7 @@ public class SolutionHelper implements Comparator<Solution>{
 
     @Override
     public int compare(Solution o1,Solution o2){
-        return  Float.compare(getCombinedFitness(o1),getCombinedFitness(o2));
+        return Float.compare(getCombinedFitness(o1),getCombinedFitness(o2));
     }
 
     public int compare5d(Solution o1, Solution o2) {

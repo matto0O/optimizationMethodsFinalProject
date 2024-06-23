@@ -30,6 +30,9 @@ public class SASolver {
     public Solution getBest(){
         return best;
     }
+    public double getAverageFitness(){
+        return SolutionHelper.getCombinedFitness(best);
+    }
     public void nextGen(){
         double currtemp=stemp;
         while (currtemp>a){

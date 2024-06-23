@@ -191,6 +191,12 @@ public class NSGA2Solver{
     public Solution getBestSolution(){
         return population.getFirst();
     }
+    public double getAverageFitness(){
+        double s=0;
+        for(var sol:population)
+            s+=SolutionHelper.getCombinedFitness(sol);
+        return s/ population.size();
+    }
 
     public void run(){
         for (int i = 0; i < iterations; i++) {

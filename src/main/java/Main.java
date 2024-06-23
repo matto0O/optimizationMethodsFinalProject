@@ -65,7 +65,7 @@ public class Main {
                 geneticAlgorithm.nextGeneration();
                 geneticAlgorithm.getBestSolution().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(geneticAlgorithm.getBestSolution()));
-                SolutionHelper.savetofile(printStream,geneticAlgorithm.getBestSolution(),i,0);
+                SolutionHelper.savetofile(printStream,geneticAlgorithm.getBestSolution(),i,geneticAlgorithm.getAverageFitness());
             }
 
             //geneticAlgorithm.run();
@@ -83,7 +83,7 @@ public class Main {
                 nsga2Solver.nextGeneration();
                 nsga2Solver.getBestSolution().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(nsga2Solver.getBestSolution()));
-                SolutionHelper.savetofile(printStream,nsga2Solver.getBestSolution(),i,0);
+                SolutionHelper.savetofile(printStream,nsga2Solver.getBestSolution(),i,nsga2Solver.getAverageFitness());
             }
         }else if ("SA".equalsIgnoreCase(algorithmName)) {
             if (args.length < 13) {
@@ -99,7 +99,7 @@ public class Main {
                 saSolver.nextGen();
                 saSolver.getBest().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(saSolver.getBest()));
-                SolutionHelper.savetofile(printStream,saSolver.getBest(),i,0);
+                SolutionHelper.savetofile(printStream,saSolver.getBest(),i,saSolver.getAverageFitness());
             }
         } else {
             System.out.println("Unsupported algorithm: " + algorithmName);
