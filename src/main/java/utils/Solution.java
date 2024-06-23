@@ -140,7 +140,7 @@ public class Solution {
         fitness+=fitness_Overworked_teacher();//
         fitness+=fitness_Holes_teacher();
         fitness+=fitness_WrongTeacherAssignment();
-        return fitness;
+        return 1000-fitness;
     }
 
     public int evaluateTotalClassFitness(){
@@ -154,7 +154,7 @@ public class Solution {
         fitness+=fitness_timestartend();//lessons late
         fitness+=fitness_MissingCourses();//not all courses are
         fitness+=fitness_CoursesInWrongClassrooms();//dsnt work at the moment
-        return fitness;
+        return 1000-fitness;
     }
     //fitness-count of how many errors there are
     public int fitness_Overworked_class() {

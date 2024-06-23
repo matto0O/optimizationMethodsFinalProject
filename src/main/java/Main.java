@@ -46,7 +46,8 @@ public class Main {
 
         SolutionHelper.setFitnessMult(Float.parseFloat(args[argnum++]),Float.parseFloat(args[argnum++]));
 
-        PrintStream printStream=new PrintStream(args[argnum++]);
+        String filename=args[argnum++];
+        PrintStream printStream=new PrintStream(filename);
 
         if ("GA".equalsIgnoreCase(algorithmName)) {
             if (args.length < 14) {
@@ -84,6 +85,8 @@ public class Main {
                 nsga2Solver.getBestSolution().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(nsga2Solver.getBestSolution()));
                 SolutionHelper.savetofile(printStream,nsga2Solver.getBestSolution(),i,nsga2Solver.getAverageFitness());
+
+                nsga2Solver.saveFront(new PrintStream(filename+"nsga"+i+".csv"));
             }
         }else if ("SA".equalsIgnoreCase(algorithmName)) {
             if (args.length < 13) {

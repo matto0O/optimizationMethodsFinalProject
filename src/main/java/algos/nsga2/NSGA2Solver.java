@@ -4,6 +4,7 @@ import utils.Instance;
 import utils.Solution;
 import utils.SolutionHelper;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -191,7 +192,14 @@ public class NSGA2Solver{
         evaluatePopulation();
     }
     public Solution getBestSolution(){
-        return population.getFirst();
+        double min=0;
+        int im=0;
+        for(int i=0;i< population.size();i++)
+            if(SolutionHelper.getCombinedFitness(population.get(i))>min){
+                im=i;
+                min=SolutionHelper.getCombinedFitness(population.get(i));
+            }
+        return population.get(im);
     }
     public double getAverageFitness(){
         double s=0;
@@ -205,6 +213,12 @@ public class NSGA2Solver{
             nextGeneration();
             System.out.println(population.getFirst().evaluateTotalTeacherFitness()
                     + " " + population.getFirst().evaluateTotalClassFitness());
+        }
+    }
+
+    public void saveFront(PrintStream printStream) {
+        for(var o:optimalFront){
+            printStream.println(o.evaluateTotalClassFitness()+","+o.evaluateTotalTeacherFitness());
         }
     }
 }

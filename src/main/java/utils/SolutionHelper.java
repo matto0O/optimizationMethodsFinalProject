@@ -25,7 +25,7 @@ public class SolutionHelper implements Comparator<Solution>{
 
     @Override
     public int compare(Solution o1,Solution o2){
-        return Float.compare(getCombinedFitness(o1),getCombinedFitness(o2));
+        return Float.compare(getCombinedFitness(o2),getCombinedFitness(o1));
     }
 
     public int compare5d(Solution o1, Solution o2) {

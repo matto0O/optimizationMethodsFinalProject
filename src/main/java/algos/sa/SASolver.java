@@ -7,7 +7,7 @@ import utils.SolutionHelper;
 import java.util.List;
 
 public class SASolver {
-    Solution best;
+    Solution best,current;
     //List<Solution> paretoFront;// future test
     double stemp;
     double a,b;
@@ -34,17 +34,23 @@ public class SASolver {
         return SolutionHelper.getCombinedFitness(best);
     }
     public void nextGen(){
+        current=best;
         double currtemp=stemp;
         while (currtemp>a){
-            Solution next = best.clone();
+            Solution next = current.clone();
             next.mutate(0.1);
             next.calculateFitness();
             double fitnext=SolutionHelper.getCombinedFitness(next);
-            double fitbest=SolutionHelper.getCombinedFitness(best);
-            if(fitnext<fitbest)
-                best=next;
-            else if(fitnext/fitbest < Math.random()+(currtemp/stemp)){
-                best=next;
+            double fitcurr=SolutionHelper.getCombinedFitness(current);
+            if(fitnext>fitcurr) {
+                current = next;
+
+                double fitbest=SolutionHelper.getCombinedFitness(best);
+                if(fitnext>fitbest)
+                    best = next;
+            }
+            else if(fitcurr/fitnext < Math.random()+(currtemp/stemp)){
+                current=next;
             }
             currtemp=currtemp*a-b;
         }
