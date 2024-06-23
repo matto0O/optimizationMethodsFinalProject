@@ -473,6 +473,35 @@ public class Solution {
         return child;
     }
 
+    public Solution clone() {
+        Solution cloned = new Solution(this.instance);
+
+        // Clone roomAvailability
+        for (Map.Entry<Room, List<SchoolDateTime>> entry : this.roomAvailability.entrySet()) {
+            cloned.roomAvailability.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        // Clone teacherAvailability
+        for (Map.Entry<Teacher, List<SchoolDateTime>> entry : this.teacherAvailability.entrySet()) {
+            cloned.teacherAvailability.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        // Clone timetables
+        for (Map.Entry<SchoolClass, List<Lesson>> entry : this.timetables.entrySet()) {
+            List<Lesson> clonedLessons = entry.getValue().stream()
+                    .map(lesson -> new Lesson(lesson.getCourse(), lesson.getRoom(), lesson.getTeacher(), lesson.getSchoolDateTime()))
+                    .collect(Collectors.toList());
+            cloned.timetables.put(entry.getKey(), clonedLessons);
+        }
+
+        // Clone fitnesses if it's not null
+        if (this.fitnesses != null) {
+            cloned.fitnesses = this.fitnesses.clone();
+        }
+
+        return cloned;
+    }
+
     public Solution(Solution s){
         this.instance = s.instance;
         this.roomAvailability = new HashMap<>(s.roomAvailability);

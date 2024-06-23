@@ -1,5 +1,6 @@
 import algos.ga.GASolver;
 import algos.nsga2.NSGA2Solver;
+import algos.sa.SASolver;
 import utils.Instance;
 import utils.SolutionHelper;
 
@@ -86,10 +87,20 @@ public class Main {
             }
         }else if ("SA".equalsIgnoreCase(algorithmName)) {
             if (args.length < 13) {
-                System.out.println("usage: <...others> <starting temp> <geometric decay> <linear tecay>");
+                System.out.println("usage: <...others> <starting temp> <geometric decay> <linear tecay> <generations>");
                 return;
             }
-            //todo
+            double startTemp = Double.parseDouble(args[argnum++]);
+            double adecay = Double.parseDouble(args[argnum++]);
+            double bdecay = Double.parseDouble(args[argnum++]);
+            int gen = Integer.parseInt(args[argnum++]);
+            SASolver saSolver=new SASolver(instance,startTemp,adecay,bdecay);
+            for (int i = 0; i < gen; i++) {
+                saSolver.nextGen();
+                saSolver.getBest().calculateFitness();
+                System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(saSolver.getBest()));
+                SolutionHelper.savetofile(printStream,saSolver.getBest(),i,0);
+            }
         } else {
             System.out.println("Unsupported algorithm: " + algorithmName);
         }
