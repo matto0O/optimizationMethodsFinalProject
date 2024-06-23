@@ -62,6 +62,7 @@ public class Main {
 
             for (int i = 0; i < gen; i++) {
                 geneticAlgorithm.nextGeneration();
+                geneticAlgorithm.getBestSolution().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(geneticAlgorithm.getBestSolution()));
                 SolutionHelper.savetofile(printStream,geneticAlgorithm.getBestSolution(),i,0);
             }
@@ -79,6 +80,7 @@ public class Main {
             NSGA2Solver nsga2Solver=new NSGA2Solver(instance, populationSize, mutationRate, crossoverRate, gen);
             for (int i = 0; i < gen; i++) {
                 nsga2Solver.nextGeneration();
+                nsga2Solver.getBestSolution().calculateFitness();
                 System.out.println("generation "+i+" "+SolutionHelper.getCombinedFitness(nsga2Solver.getBestSolution()));
                 SolutionHelper.savetofile(printStream,nsga2Solver.getBestSolution(),i,0);
             }

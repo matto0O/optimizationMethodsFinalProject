@@ -134,21 +134,30 @@ public class Solution {
     // TODO fitness caching
     public int evaluateTotalTeacherFitness(){
         int fitness = 0;
-        for (Teacher teacher : teacherAvailability.keySet()) {
-            fitness += evaluateTeacherFitness(teacher);
-        }
+//        for (Teacher teacher : teacherAvailability.keySet()) {
+//            fitness += evaluateTeacherFitness(teacher);
+//        }
+        fitness+=fitness_Overworked_teacher();
+        fitness+=fitness_Holes_teacher();
+        fitness+=fitness_WrongTeacherAssignment();
         return fitness;
     }
 
     public int evaluateTotalClassFitness(){
         int fitness = 0;
-        for (SchoolClass schoolClass : timetables.keySet()) {
-            fitness += evaluateClassFitness(schoolClass);
-        }
+//        for (SchoolClass schoolClass : timetables.keySet()) {
+//            fitness += evaluateClassFitness(schoolClass);
+//        }
+        fitness+=fitness_Overworked_class();
+        fitness+=fitness_Holes_Class();
+        fitness+=fitness_Overbooked();
+        fitness+=fitness_timestartend();
+        fitness+=fitness_MissingCourses();
+        fitness+=fitness_CoursesInWrongClassrooms();
         return fitness;
     }
     //fitness-count of how many errors there are
-    public int fitness_Overworked() {
+    public int fitness_Overworked_class() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
             List<Lesson> lessons = timetables.get(schoolClass);
@@ -162,6 +171,10 @@ public class Solution {
                 }
             }
         }
+        return count;
+    }
+    public int fitness_Overworked_teacher() {
+        int count = 0;
         for (Teacher teacher : teacherAvailability.keySet()) {
             List<SchoolDateTime> availableTimes = teacherAvailability.get(teacher);
             for (int i = 0; i < availableTimes.size(); i++) {
@@ -192,24 +205,28 @@ public class Solution {
         }
         return count;
     }
-    public int fitness_Holes() {
+    public int fitness_Holes_Class() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
             List<Lesson> lessons = timetables.get(schoolClass);
-            lessons.sort(Comparator.comparing(l -> l.getSchoolDateTime().getPeriod()));
-            lessons.sort(Comparator.comparing(l -> l.getSchoolDateTime().getDay()));
+            lessons.sort(Comparator.comparingInt((Lesson o) -> o.getSchoolDateTime().getDay().ordinal()).thenComparingInt(o -> o.getSchoolDateTime().getPeriod()));
             for (int i = 0; i < lessons.size() - 1; i++) {
                 Lesson lesson1 = lessons.get(i);
                 Lesson lesson2 = lessons.get(i + 1);
-                if (lesson2.getSchoolDateTime().getDay()==lesson1.getSchoolDateTime().getDay() && lesson2.getSchoolDateTime().getPeriod() - lesson1.getSchoolDateTime().getPeriod() > 1) {
-                    count++;
+                if (lesson2.getSchoolDateTime().getDay() == lesson1.getSchoolDateTime().getDay()) {
+                    int holes=lesson2.getSchoolDateTime().getPeriod() - lesson1.getSchoolDateTime().getPeriod();
+                    if(holes>0)
+                        count+=holes;
                 }
             }
         }
+        return count;
+    }
+    public int fitness_Holes_teacher() {
+        int count = 0;
         for (Teacher teacher : teacherAvailability.keySet()) {
             List<SchoolDateTime> availableTimes = teacherAvailability.get(teacher);
-            availableTimes.sort(Comparator.comparing(SchoolDateTime::getPeriod));
-            availableTimes.sort(Comparator.comparing(SchoolDateTime::getDay));
+            availableTimes.sort(Comparator.comparingInt((SchoolDateTime o) -> o.getDay().ordinal()).thenComparingInt(SchoolDateTime::getPeriod));
             for (int i = 0; i < availableTimes.size() - 1; i++) {
                 SchoolDateTime time1 = availableTimes.get(i);
                 SchoolDateTime time2 = availableTimes.get(i + 1);
@@ -232,6 +249,69 @@ public class Solution {
         }
         return count;
     }
+    public int fitness_MissingCourses() {
+        int count = 0;
+        for (SchoolClass schoolClass : timetables.keySet()) {
+            List<Lesson> lessons = timetables.get(schoolClass);
+            Map<Course,Integer> scheduledCourses = new HashMap<Course,Integer>();
+
+            // Collect all scheduled courses for this class
+            for (Lesson lesson : lessons) {
+                if(scheduledCourses.containsKey(lesson.getCourse())){
+                    scheduledCourses.put(lesson.getCourse(),scheduledCourses.get(lesson.getCourse())+1);
+                }
+                else
+                    scheduledCourses.put(lesson.getCourse(),1);
+            }
+
+            // Get all required courses for this class
+            var requiredCourses = schoolClass.getCourses();
+
+            // Count missing courses
+            for (var c : requiredCourses.keySet()) {
+                if (!scheduledCourses.containsKey(c)) {
+                    count++;
+                }
+                else{
+                    if(!Objects.equals(scheduledCourses.get(c), requiredCourses.get(c)))
+                        count++;
+                }
+            }
+        }
+        return count;
+    }
+    public int fitness_CoursesInWrongClassrooms() {
+        int count = 0;
+        for (SchoolClass schoolClass : timetables.keySet()) {
+            List<Lesson> lessons = timetables.get(schoolClass);
+            for (Lesson lesson : lessons) {
+                Course course = lesson.getCourse();
+                Room assignedRoom = lesson.getRoom();
+
+                // Check if the assigned room is suitable for the course
+                if (false){//assignedRoom course) {//todo, we dont simulate this,lol wf w sali komputerower
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    public int fitness_WrongTeacherAssignment() {
+        int count = 0;
+        for (SchoolClass schoolClass : timetables.keySet()) {
+            List<Lesson> lessons = timetables.get(schoolClass);
+            for (Lesson lesson : lessons) {
+                Teacher assignedTeacher = lesson.getTeacher();
+                Course subject = lesson.getCourse();
+
+                // Check if the assigned teacher is qualified to teach the subject
+                if (!assignedTeacher.canTeach(subject)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
     public int fitness_ClassChanging() {
         int count = 0;
         for (SchoolClass schoolClass : timetables.keySet()) {
@@ -247,14 +327,11 @@ public class Solution {
         }
         return count;
     }
-    //fitness class missing courses
-    //fitness courses in wrong classrooms
-    //fitness wrong teacher in course
     //fitness teacher(or students) changes classroom during the day
 
     private int[] fitnesses;
     public void calculateFitness(){
-        fitnesses = new int[]{this.fitness_Overworked(), this.fitness_Overbooked(), this.fitness_Holes(), this.fitness_timestartend(), this.fitness_ClassChanging()};
+        fitnesses = new int[]{this.evaluateTotalTeacherFitness(),this.evaluateTotalClassFitness()};
     }
 
     //ea functions

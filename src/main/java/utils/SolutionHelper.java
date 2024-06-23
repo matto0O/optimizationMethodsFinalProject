@@ -14,7 +14,8 @@ public class SolutionHelper implements Comparator<Solution>{
     }
 
     public static float getCombinedFitness(Solution s){
-        return teacherMult*s.evaluateTotalTeacherFitness()+studentMult*s.evaluateTotalClassFitness();
+        return teacherMult*s.getFitnesses()[0]+studentMult*s.getFitnesses()[1];
+        //return teacherMult*s.evaluateTotalTeacherFitness()+studentMult*s.evaluateTotalClassFitness();
     }
 
     public static void setFitnessMult(float teacherMultf, float studentMultf) {
